@@ -69,3 +69,23 @@ obj-$(CONFIG_SND_SOC_LOWLAND) += snd-soc-lowland.o
 obj-$(CONFIG_SND_SOC_LITTLEMILL) += snd-soc-littlemill.o
 obj-$(CONFIG_SND_SOC_BELLS) += snd-soc-bells.o
 obj-$(CONFIG_SND_SOC_HKDK_MAX98090) += snd-soc-hkdk-max98090.o
+
+# FriendlyARM Support
+snd-soc-wm8960-objs := wm8960.o
+snd-soc-tiny4412-wm8960-objs := tiny4412_wm8960.o
+
+ifneq ($(wildcard sound/soc/samsung/wm8960.c),)
+ifeq ($(FA),1)
+obj-$(CONFIG_SND_SOC_WM8960_TINY4412) += snd-soc-wm8960.o
+else
+obj-m += snd-soc-wm8960.o
+endif  #FA
+endif
+
+ifneq ($(wildcard sound/soc/samsung/tiny4412_wm8960.c),)
+ifeq ($(FA),1)
+obj-$(CONFIG_SND_SOC_SAMSUNG_TINY4412_WM8960) += snd-soc-tiny4412-wm8960.o
+else
+obj-m += snd-soc-tiny4412-wm8960.o
+endif  #FA
+endif
