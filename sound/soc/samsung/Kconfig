@@ -71,6 +71,23 @@ config SND_SOC_SAMSUNG_SMDK_WM8994
 	help
 		Say Y if you want to add support for SoC audio on the SMDKs.
 
+config SND_SOC_WM8960_TINY4412
+	tristate
+
+config SND_SOC_SAMSUNG_TINY4412_WM8960
+	tristate "SoC I2S Audio support for WM8960 on NanoPC"
+	depends on SND_SOC_SAMSUNG && MACH_NANOPC
+	depends on I2C=y && GENERIC_HARDIRQS
+	select SND_SOC_WM8960_TINY4412
+	select SND_SAMSUNG_I2S
+	help
+	  Say Y if you want to add support for SoC audio on the NanoPC.
+
+config SND_SAMSUNG_NORMAL
+	bool "Normal Audio support"
+	help
+	  Say Y if you want to support normal audio.
+
 config SND_SOC_SAMSUNG_SMDK2443_WM9710
 	tristate "SoC AC97 Audio support for SMDK2443 - WM9710"
 	depends on SND_SOC_SAMSUNG && MACH_SMDK2443

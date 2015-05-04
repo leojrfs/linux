@@ -22,7 +22,7 @@
 
 #if defined(CONFIG_ODROID_X)
 #define CPUFREQ_LEVEL_END	(L16 + 1)
-#elif defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2)
+#elif defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 #define CPUFREQ_LEVEL_END	(L18 + 1)
 #endif
 
@@ -46,7 +46,7 @@ static unsigned int exynos4x12_volt_table[CPUFREQ_LEVEL_END];
 static struct cpufreq_frequency_table exynos4x12_freq_table[] = {
 	{L0, 1800 * 1000},
 	{L1, 1704 * 1000},
-	{L2, 1600 * 1000},	
+	{L2, 1600 * 1000},
 	{L3, 1500 * 1000},
 	{L4, 1400 * 1000},
 	{L5, 1300 * 1000},
@@ -63,26 +63,26 @@ static struct cpufreq_frequency_table exynos4x12_freq_table[] = {
 	{L16,200 * 1000},
 	{0, CPUFREQ_TABLE_END},
 };
-#elif defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2)
+#elif defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 static struct cpufreq_frequency_table exynos4x12_freq_table[] = {
-	{L0, 2000*1000}, 
-	{L1, 1920*1000}, 
-	{L2, 1800*1000}, 
-	{L3, 1704*1000}, 
+	{L0, 2000*1000},
+	{L1, 1920*1000},
+	{L2, 1800*1000},
+	{L3, 1704*1000},
 	{L4, 1600*1000},
-	{L5, 1500*1000}, 
-	{L6, 1400*1000}, 
-	{L7, 1300*1000}, 
-	{L8, 1200*1000}, 
+	{L5, 1500*1000},
+	{L6, 1400*1000},
+	{L7, 1300*1000},
+	{L8, 1200*1000},
 	{L9, 1100*1000},
-	{L10, 1000*1000}, 
-	{L11, 900*1000}, 
-	{L12, 800*1000}, 
-	{L13, 700*1000}, 
+	{L10, 1000*1000},
+	{L11, 900*1000},
+	{L12, 800*1000},
+	{L13, 700*1000},
 	{L14, 600*1000},
-	{L15, 500*1000}, 
-	{L16, 400*1000}, 
-	{L17, 300*1000}, 
+	{L15, 500*1000},
+	{L16, 400*1000},
+	{L17, 300*1000},
 	{L18, 200*1000},
 	{0, CPUFREQ_TABLE_END},
 };
@@ -144,7 +144,7 @@ static unsigned int clkdiv_cpu0_4412[CPUFREQ_LEVEL_END][8] = {
 	 * { DIVCORE, DIVCOREM0, DIVCOREM1, DIVPERIPH,
 	 *		DIVATB, DIVPCLK_DBG, DIVAPLL, DIVCORE2 }
 	 */
-	#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2)
+	#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 	/* 2000 Mhz Support */
 	{ 0, 3, 7, 0, 6, 1, 2, 0},
 
@@ -254,7 +254,7 @@ static unsigned int clkdiv_cpu1_4412[CPUFREQ_LEVEL_END][3] = {
 	/* Clock divider value for following
 	 * { DIVCOPY, DIVHPM, DIVCORES }
 	 */
-#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_Q2) || defined(CONFIG_ODROID_U2)
+#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_Q2) || defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 	/* 2000Mhz */
 	{ 7, 0, 7 },
 
@@ -314,7 +314,7 @@ static unsigned int clkdiv_cpu1_4412[CPUFREQ_LEVEL_END][3] = {
 };
 
 static unsigned int exynos4x12_apll_pms_table[CPUFREQ_LEVEL_END] = {
-#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2)
+#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 	/* 2000MHz */
 	((250 << 16) | (3 << 8) | (0x0)),
 
@@ -373,7 +373,7 @@ static unsigned int exynos4x12_apll_pms_table[CPUFREQ_LEVEL_END] = {
 	((100 << 16) | (3 << 8) | (0x2)),
 };
 
-#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2)
+#if defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 static const unsigned int asv_voltage_4x12[CPUFREQ_LEVEL_END] = {
 	1425000,	// 2000Mhz (L0)
 	1400000,	// 1920Mhz (L1)

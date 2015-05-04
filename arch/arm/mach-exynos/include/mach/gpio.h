@@ -167,7 +167,7 @@ enum exynos4_gpio_number {
 
 /* Add controls for the external GPIO's on U3 */
 
-#if defined(CONFIG_ODROID_U2)
+#if defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 #define ODROIDU3_EXT_GPIO_BASE(x) (EXYNOS4_GPIO_END + (x))
 #endif
 

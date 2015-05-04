@@ -409,7 +409,7 @@ static unsigned int s3c24xx_serial_get_mctrl(struct uart_port *port)
 static void s3c24xx_serial_set_mctrl(struct uart_port *port, unsigned int mctrl)
 {
 	/* todo - possibly remove AFC and do manual CTS */
-#if defined(CONFIG_ODROID_U2)
+#if defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 	if(port->line == 0) {
 		if(port->mctrl & TIOCM_DTR){
 	        gpio_request(EXYNOS4_GPX1(5), "GPX1.5");

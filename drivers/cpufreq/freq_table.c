@@ -47,7 +47,7 @@ int cpufreq_frequency_table_cpuinfo(struct cpufreq_policy *policy,
 
 #if defined(CONFIG_ODROID_X)
 	policy->max = 1500000;
-#elif defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2)
+#elif defined(CONFIG_ODROID_X2) || defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1)
 	policy->max = 1704000;
 #endif
 	policy->min = 200000;

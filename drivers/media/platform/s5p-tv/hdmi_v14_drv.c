@@ -271,11 +271,11 @@ static void hdmi_reg_init(struct hdmi_device *hdev)
 		hdmi_write_mask(hdev, HDMI_MODE_SEL, HDMI_MODE_HDMI_EN, HDMI_MODE_MASK);
 		/* disable bluescreen */
 		hdmi_write_mask(hdev, HDMI_CON_0, 0, HDMI_BLUE_SCR_EN);
-	
+
 		hdmi_writeb(hdev, HDMI_AVI_CON, 0x02);
 		hdmi_writeb(hdev, HDMI_AVI_BYTE(1), 2 << 5);
 	}
-	
+
 }
 
 static void hdmi_timing_apply(struct hdmi_device *hdev,
@@ -395,7 +395,7 @@ static void hdmi_timing_apply(struct hdmi_device *hdev,
 static void hdmi_set_acr(u32 freq, u8 *acr)
 {
 	u32 n, cts;
-	
+
 	switch (freq) {
 		case 32000:
 			n = 4096;
@@ -430,11 +430,11 @@ static void hdmi_set_acr(u32 freq, u8 *acr)
 			cts = 0;
 			break;
 	}
-	
+
 	acr[1] = cts >> 16;
 	acr[2] = cts >> 8 & 0xff;
 	acr[3] = cts & 0xff;
-	
+
 	acr[4] = n >> 16;
 	acr[5] = n >> 8 & 0xff;
 	acr[6] = n & 0xff;
@@ -459,12 +459,12 @@ void hdmi_reg_asp(struct hdmi_device *hdev, u32 channel)
 	if (channel == 2)
         hdmi_writeb(hdev, HDMI_ASP_CON, HDMI_AUD_NO_DST_DOUBLE | HDMI_AUD_TYPE_SAMPLE |
                 HDMI_AUD_MODE_TWO_CH | HDMI_AUD_SP_ALL_DIS);
-	else            
+	else
         hdmi_writeb(hdev, HDMI_ASP_CON, HDMI_AUD_MODE_MULTI_CH | HDMI_AUD_SP_AUD2_EN |
                 HDMI_AUD_SP_AUD1_EN | HDMI_AUD_SP_AUD0_EN);
-	
+
 	hdmi_writeb(hdev, HDMI_ASP_SP_FLAT, HDMI_ASP_SP_FLAT_AUD_SAMPLE);
-	
+
 	if (channel == 2) {
         hdmi_writeb(hdev, HDMI_ASP_CHCFG0, HDMI_SPK0R_SEL_I_PCM0R | HDMI_SPK0L_SEL_I_PCM0L);
         hdmi_writeb(hdev, HDMI_ASP_CHCFG1, HDMI_SPK0R_SEL_I_PCM0R | HDMI_SPK0L_SEL_I_PCM0L);
@@ -602,7 +602,7 @@ static int hdmi_conf_apply(struct hdmi_device *hdmi_dev)
 	mdelay(10);
 	hdmi_write_mask(hdmi_dev, HDMI_CORE_RSTOUT, ~0, HDMI_CORE_SW_RSTOUT);
 	mdelay(10);
-	
+
 	// enable or disable audio, if type is DVI no audio is sent, if type is hdmi will send audio over.
 	// default is always HDMI
 	if(strcmp(hdtv_type, "dvi") == 0) {
@@ -870,7 +870,7 @@ static int hdmi_streamon(struct hdmi_device *hdev)
 
 	if(strcmp(hdtv_type, "hdmi") == 0)
 		hdmi_audio_control(hdev,true);
-	
+
 	hdmi_dumpregs(hdev, "streamon");
 	return 0;
 }
@@ -884,7 +884,7 @@ static int hdmi_streamoff(struct hdmi_device *hdev)
 
 	hdmi_write_mask(hdev, HDMI_CON_0, 0, HDMI_EN);
 	hdmi_write_mask(hdev, HDMI_TG_CMD, 0, HDMI_TG_EN);
-	if(strcmp(hdtv_type, "hdmi") == 0)	
+	if(strcmp(hdtv_type, "hdmi") == 0)
 		hdmi_audio_control(hdev,false);
 
 	/* pixel(vpll) clock is used for HDMI in config mode */
@@ -1081,7 +1081,7 @@ static void hdmi_resources_cleanup(struct hdmi_device *hdev)
 
 static int hdmi_g_default_preset(struct hdmi_device *hdev)
 {
- #if defined(CONFIG_MACH_HKDK4412)
+ #if defined(CONFIG_MACH_HKDK4412) || defined(CONFIG_NANOPC)
 	pr_emerg("s5p-tv: Board is ODROID-X/X2/U2\n");
   #if defined(CONFIG_ODORID_HDMI_SW_CONFIG)
 	// new way to handle this
@@ -1109,7 +1109,7 @@ static int hdmi_g_default_preset(struct hdmi_device *hdev)
 		return V4L2_DV_1080P24;
 	else
 		return V4L2_DV_720P60;
-	
+
   #elif defined(CONFIG_ODROID_X) || defined(CONFIG_ODROID_X2) && !defined(CONFIG_ODROID_X_X2_BYPASS_HDMI_JUMPER)
 	pr_emerg("s5p-tv: ODROID-X/X2 Jumper Config Mode\n");
 	if (gpio_request(EXYNOS4_GPX0(3), "EXYNOS4_GPX0(3)")) {
@@ -1121,10 +1121,10 @@ static int hdmi_g_default_preset(struct hdmi_device *hdev)
 	}
 	dev_dbg(hdev->dev, "%s : Default HDMI preset is %s.\n" , __FUNCTION__ , gpio_get_value(EXYNOS4_GPX0(3)) ? "1920x1080" : "1280x720");
 	return  gpio_get_value(EXYNOS4_GPX0(3)) ? V4L2_DV_1080P60 : V4L2_DV_720P60;
-  #elif defined(CONFIG_ODROID_U2) || defined(CONFIG_ODROID_X_X2_BYPASS_HDMI_JUMPER)
+  #elif defined(CONFIG_ODROID_U2) || defined(CONFIG_NANOPC_T1) || defined(CONFIG_ODROID_X_X2_BYPASS_HDMI_JUMPER)
 	pr_emerg("s5p-tv: ODROID-U2 or X/X2 ByPass Jumper Mode\n");
 	if(!strncmp("1080", hdmiargs, 4)) {
-		pr_emerg("s5p-tv: Selected V4L2_DV_1080P60 via software\n");	
+		pr_emerg("s5p-tv: Selected V4L2_DV_1080P60 via software\n");
 		return V4L2_DV_1080P60;
 	} else {
 		pr_emerg("s5p-tv: Selected V4L2_DV_720P60 via software\n");
