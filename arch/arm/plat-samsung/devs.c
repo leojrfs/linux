@@ -151,6 +151,15 @@ struct platform_device s3c_device_camif = {
 
 /* ASOC DMA */
 
+struct platform_device samsung_asoc_dma = {
+	.name		= "samsung-audio",
+	.id		= -1,
+	.dev		= {
+		.dma_mask		= &samsung_device_dma_mask,
+		.coherent_dma_mask	= DMA_BIT_MASK(32),
+	}
+};
+
 struct platform_device samsung_asoc_idma = {
 	.name		= "samsung-idma",
 	.id		= -1,
@@ -324,7 +333,7 @@ static struct resource mali_gpu_resource[] = {
 			IRQ_PP3_3D,
 			IRQ_PPMMU3_3D)
 };
-  
+
 struct platform_device mali_gpu_device = {
         .name           = MALI_GPU_NAME_UTGARD,
         .id             = 0,
@@ -1548,7 +1557,7 @@ void __init s3c_hsotg_set_platdata(struct s3c_hsotg_plat *pd)
 		npd->phy_suspend = s5p_usb_phy_suspend;
 	if (!npd->phy_resume)
 		npd->phy_resume = s5p_usb_phy_resume;
-	
+
 	npd -> phy_type = S5P_USB_PHY_DEVICE;
 }
 #endif /* CONFIG_S3C_DEV_USB_HSOTG */
