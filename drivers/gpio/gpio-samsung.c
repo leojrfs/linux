@@ -2393,6 +2393,36 @@ static struct samsung_gpio_chip exynos4_gpios_2[] = {
 			.ngpio	= EXYNOS4_GPIO_Y6_NR,
 			.label	= "GPY6",
 		},
+	},  {
+		.chip	= {
+			.base	= EXYNOS4X12_GPM0(0),
+			.ngpio	= EXYNOS4X12_GPIO_M0_NR,
+			.label	= "GPM0",
+		},
+	}, {
+		.chip	= {
+			.base	= EXYNOS4X12_GPM1(0),
+			.ngpio	= EXYNOS4X12_GPIO_M1_NR,
+			.label	= "GPM1",
+		},
+	}, {
+		.chip	= {
+			.base	= EXYNOS4X12_GPM2(0),
+			.ngpio	= EXYNOS4X12_GPIO_M2_NR,
+			.label	= "GPM2",
+		},
+	}, {
+		.chip	= {
+			.base	= EXYNOS4X12_GPM3(0),
+			.ngpio	= EXYNOS4X12_GPIO_M3_NR,
+			.label	= "GPM3",
+		},
+	}, {
+		.chip	= {
+			.base	= EXYNOS4X12_GPM4(0),
+			.ngpio	= EXYNOS4X12_GPIO_M4_NR,
+			.label	= "GPM4",
+		},
 	}, {
 		.config	= &samsung_gpio_cfgs[9],
 		.irq_base = IRQ_EINT(0),
