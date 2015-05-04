@@ -36,6 +36,8 @@ struct s3c_fb_pd_win {
 	unsigned short		yres;
 	unsigned short		virtual_x;
 	unsigned short		virtual_y;
+	unsigned short		width;
+	unsigned short		height;
 };
 
 /**
