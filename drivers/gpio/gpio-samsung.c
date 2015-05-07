@@ -1075,8 +1075,9 @@ static void __init samsung_gpiolib_add_4bit_chips(struct samsung_gpio_chip *chip
 		if (!chip->pm)
 			chip->pm = __gpio_pm(&samsung_gpio_pm_4bit);
 		if ((base != NULL) && (chip->base == NULL))
+        {
 			chip->base = base + ((i) * 0x20);
-
+        }
 		chip->bitmap_gpio_int = 0;
 
 		samsung_gpiolib_add(chip);
@@ -2230,13 +2231,17 @@ static struct samsung_gpio_chip exynos4_gpios_1[] = {
 			.ngpio	= EXYNOS4_GPIO_D1_NR,
 			.label	= "GPD1",
 		},
-	}, {
+	},
+#if 0
+    {
 		.chip	= {
 			.base	= EXYNOS4_GPE0(0),
 			.ngpio	= EXYNOS4_GPIO_E0_NR,
 			.label	= "GPE0",
 		},
-	}, {
+	},
+
+    {
 		.chip	= {
 			.base	= EXYNOS4_GPE1(0),
 			.ngpio	= EXYNOS4_GPIO_E1_NR,
@@ -2260,7 +2265,10 @@ static struct samsung_gpio_chip exynos4_gpios_1[] = {
 			.ngpio	= EXYNOS4_GPIO_E4_NR,
 			.label	= "GPE4",
 		},
-	}, {
+	},
+#endif
+
+    {
 		.chip	= {
 			.base	= EXYNOS4_GPF0(0),
 			.ngpio	= EXYNOS4_GPIO_F0_NR,
@@ -2846,18 +2854,21 @@ static __init void exynos4_gpiolib_init(void)
 	samsung_gpiolib_add_4bit_chips(exynos4_gpios_1,
 				       nr_chips, gpio_base1);
 
+	/* need to set base address for gpf */
+	chip = &exynos4_gpios_1[7];
+	gpx_base = gpio_base1 + 0x180;
+	for (i = 0; i < 4; i++, chip++, gpx_base += 0x20)
+	{
+		chip->base = gpx_base;
+	}
+
+
 	/* gpio part2 */
 	gpio_base2 = ioremap(EXYNOS4_PA_GPIO2, SZ_4K);
 	if (gpio_base2 == NULL) {
 		pr_err("unable to ioremap for gpio_base2\n");
 		goto err_ioremap2;
 	}
-
-	/* need to set base address for gpx */
-	chip = &exynos4_gpios_2[16];
-	gpx_base = gpio_base2 + 0xC00;
-	for (i = 0; i < 4; i++, chip++, gpx_base += 0x20)
-		chip->base = gpx_base;
 
 	chip = exynos4_gpios_2;
 	nr_chips = ARRAY_SIZE(exynos4_gpios_2);
@@ -2872,6 +2883,23 @@ static __init void exynos4_gpiolib_init(void)
 	}
 	samsung_gpiolib_add_4bit_chips(exynos4_gpios_2,
 				       nr_chips, gpio_base2);
+
+    /* need to set base address for gpm */
+	chip = &exynos4_gpios_2[16];
+	gpx_base = gpio_base2 + 0x260;
+	for (i = 0; i < 5; i++, chip++, gpx_base += 0x20)
+	{
+		chip->base = gpx_base;
+	}
+
+	/* need to set base address for gpx */
+	chip = &exynos4_gpios_2[21];
+	gpx_base = gpio_base2 + 0xC00;
+	for (i = 0; i < 4; i++, chip++, gpx_base += 0x20)
+	{
+		chip->base = gpx_base;
+	}
+
 
 	/* gpio part3 */
 	gpio_base3 = ioremap(EXYNOS4_PA_GPIO3, SZ_256);

@@ -434,9 +434,10 @@ static struct regulator_init_data max77686_ldo10_data = {
 		.apply_uV	= 1,
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 		.state_mem	= {
-			.uV		= 1800000,
-			.enabled = 1,
+			.disabled	= 1,
+			.mode       = REGULATOR_MODE_STANDBY,
 		},
+        .initial_state = PM_SUSPEND_MEM,
 	},
 	.num_consumer_supplies  = ARRAY_SIZE(ldo10_consumer_77686),
 	.consumer_supplies  = ldo10_consumer_77686,
