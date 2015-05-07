@@ -40,7 +40,8 @@
 
 #define MAX_USBCTRL_VENDORREQ_TIMES		10
 
-#ifdef CONFIG_MACH_HKDK4412
+//#ifdef CONFIG_MACH_HKDK4412
+#if defined(CONFIG_MACH_HKDK4412) || defined(MACH_NANOPC)
 int _usbctrl_vendorreq_sync_write(struct usb_device *udev, u8 request,
           u16 value, u16 index, void *pdata,
           u16 len)
@@ -203,7 +204,8 @@ static void _usb_write_async(struct usb_device *udev, u32 addr, u32 val,
 	index = REALTEK_USB_VENQT_CMD_IDX; /* n/a */
 	wvalue = (u16)(addr&0x0000ffff);
 	data = cpu_to_le32(val);
-#ifdef 	CONFIG_MACH_HKDK4412
+//#ifdef 	CONFIG_MACH_HKDK4412
+#if defined(CONFIG_MACH_HKDK4412) || defined(MACH_NANOPC)
 	_usbctrl_vendorreq_sync_write(udev, request, wvalue, index, &data, len);
 #else
 	_usbctrl_vendorreq_async_write(udev, request, wvalue, index, &data, len);

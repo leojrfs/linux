@@ -1004,7 +1004,9 @@ static int samsung_i2s_probe(struct platform_device *pdev)
 		sec_dai = dev_get_drvdata(&pdev->dev);
 		snd_soc_register_dai(&sec_dai->pdev->dev,
 			&sec_dai->i2s_dai_drv);
+#ifndef CONFIG_MACH_NANOPC
 		asoc_dma_platform_register(&pdev->dev);
+#endif
 		return 0;
 	}
 
@@ -1102,10 +1104,11 @@ static int samsung_i2s_probe(struct platform_device *pdev)
 	}
 
 	snd_soc_register_dai(&pri_dai->pdev->dev, &pri_dai->i2s_dai_drv);
-
 	pm_runtime_enable(&pdev->dev);
 
+#ifndef CONFIG_MACH_NANOPC
 	asoc_dma_platform_register(&pdev->dev);
+#endif
 
 	return 0;
 err:
@@ -1135,7 +1138,9 @@ static int samsung_i2s_remove(struct platform_device *pdev)
 	i2s->pri_dai = NULL;
 	i2s->sec_dai = NULL;
 
+#ifndef CONFIG_MACH_NANOPC
 	asoc_dma_platform_unregister(&pdev->dev);
+#endif
 	snd_soc_unregister_dai(&pdev->dev);
 
 	return 0;

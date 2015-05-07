@@ -432,6 +432,7 @@ static struct snd_soc_platform_driver samsung_asoc_platform = {
 	.pcm_free	= dma_free_dma_buffers,
 };
 
+#ifndef CONFIG_MACH_NANOPC
 int asoc_dma_platform_register(struct device *dev)
 {
 	return snd_soc_register_platform(dev, &samsung_asoc_platform);
@@ -447,3 +448,44 @@ EXPORT_SYMBOL_GPL(asoc_dma_platform_unregister);
 MODULE_AUTHOR("Ben Dooks, <ben@simtec.co.uk>");
 MODULE_DESCRIPTION("Samsung ASoC DMA Driver");
 MODULE_LICENSE("GPL");
+
+#else
+
+static int samsung_asoc_platform_probe(struct platform_device *pdev)
+{
+	return snd_soc_register_platform(&pdev->dev, &samsung_asoc_platform);
+}
+
+static int samsung_asoc_platform_remove(struct platform_device *pdev)
+{
+	snd_soc_unregister_platform(&pdev->dev);
+	return 0;
+}
+
+static struct platform_driver asoc_dma_driver = {
+	.driver = {
+		.name = "samsung-audio",
+		.owner = THIS_MODULE,
+	},
+
+	.probe = samsung_asoc_platform_probe,
+	.remove = samsung_asoc_platform_remove,
+};
+
+static int __init samsung_asoc_init(void)
+{
+	return platform_driver_register(&asoc_dma_driver);
+}
+module_init(samsung_asoc_init);
+
+static void __exit samsung_asoc_exit(void)
+{
+	platform_driver_unregister(&asoc_dma_driver);
+}
+module_exit(samsung_asoc_exit);
+
+MODULE_AUTHOR("Ben Dooks, <ben@simtec.co.uk>");
+MODULE_DESCRIPTION("Samsung ASoC DMA Driver");
+MODULE_LICENSE("GPL");
+MODULE_ALIAS("platform:samsung-audio");
+#endif
