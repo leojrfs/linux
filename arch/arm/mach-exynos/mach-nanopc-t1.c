@@ -731,9 +731,9 @@ static void __init nanopc_machine_init(void)
 	hkdk4412_usbswitch_init();
 #endif
 
-#ifdef CONFIG_LCD_LP101WH1
-	nanopc_fb_init_pdata(&nanopc_fb_pdata);
-#endif
+//#ifdef CONFIG_LCD_LP101WH1
+//	nanopc_fb_init_pdata(&nanopc_fb_pdata);
+//#endif
 
 	s3c64xx_spi1_set_platdata(NULL, 0, 1);
 	spi_register_board_info(spi1_board_info, ARRAY_SIZE(spi1_board_info));
