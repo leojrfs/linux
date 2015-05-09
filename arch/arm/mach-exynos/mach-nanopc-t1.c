@@ -58,10 +58,13 @@
 #include <mach/map.h>
 #include <mach/regs-pmu.h>
 #include <mach/dwmci.h>
+#include <drm/exynos_drm.h>
+
 
 #include "common.h"
 #include "pmic-77686.h"
 
+#include <linux/w1-gpio.h>
 
 /* Audio */
 static struct platform_device tiny4412_audio = {
@@ -69,7 +72,7 @@ static struct platform_device tiny4412_audio = {
 	.id			= -1,
 };
 
-
+/**
 #include <mach/s3cfb.h>
 #define CONFIG_FB_S3C_NR_BUFFERS 3
 static void __init nanopc_fb_init_pdata(struct s3c_fb_platdata *pd) {
@@ -106,7 +109,7 @@ static void __init nanopc_fb_init_pdata(struct s3c_fb_platdata *pd) {
 	mode->xres			= lcd->width;
 	mode->yres			= lcd->height;
 
-	/* calculates pixel clock */
+	// calculates pixel clock
 	div  = mode->left_margin + mode->hsync_len + mode->right_margin +
 		mode->xres;
 	div *= mode->upper_margin + mode->vsync_len + mode->lower_margin +
@@ -117,7 +120,7 @@ static void __init nanopc_fb_init_pdata(struct s3c_fb_platdata *pd) {
 
 	mode->pixclock		= pixclk + 386;
 
-	/* initialize signal polarity of RGB interface */
+	// initialize signal polarity of RGB interface
 	if (lcd->polarity.rise_vclk)
 		val |= VIDCON1_INV_VCLK;
 	if (lcd->polarity.inv_hsync)
@@ -128,7 +131,7 @@ static void __init nanopc_fb_init_pdata(struct s3c_fb_platdata *pd) {
 		val |= VIDCON1_INV_VDEN;
 
 	pd->vidcon1 = val;
-}
+}*/
 
 extern void exynos4_setup_dwmci_cfg_gpio(struct platform_device *dev, int width);
 
@@ -264,13 +267,13 @@ static struct i2c_board_info nanopc_i2c_devs4[] __initdata = {
 
 static struct gpio_led nanopc_gpio_leds[] = {
 	{
-		.name		= "led1",	
-		.default_trigger	= "heartbeat",	
+		.name		= "led1",
+		.default_trigger	= "heartbeat",
 		.gpio		= EXYNOS4X12_GPM4(0),
 		.active_low	= 1,
 	},
 	{
-		.name		= "led2",	
+		.name		= "led2",
 		.default_trigger	= "heartbeat",
 		.gpio		= EXYNOS4X12_GPM4(1),
 		.active_low	= 1,
@@ -301,31 +304,24 @@ static struct platform_pwm_backlight_data nanopc_bl_data = {
 	.pwm_period_ns	= 1000,
 };
 
-#if defined(CONFIG_LCD_LP101WH1)
-static struct s3c_fb_pd_win nanopc_fb_win0 = {
-	.max_bpp	= 32,
-	.default_bpp	= 24,
-	.xres		= 1360,
-	.yres		= 768,
-};
-
-static struct fb_videomode nanopc_lcd_timing = {
-	.left_margin	= 80,
-	.right_margin	= 48,
-	.upper_margin	= 14,
-	.lower_margin	= 3,
-	.hsync_len	= 32,
-	.vsync_len	= 5,
-	.xres		= 1360,
-	.yres		= 768,
-};
-
-static struct s3c_fb_platdata nanopc_fb_pdata __initdata = {
-	.win[0]		= &nanopc_fb_win0,
-	.vtiming	= &nanopc_lcd_timing,
+#if defined(CONFIG_LCD_LP101WH1)  && defined(CONFIG_DRM_EXYNOS_FIMD)
+static struct exynos_drm_fimd_pdata drm_fimd_pdata = {
+	.panel = {
+		.timing = {
+			.left_margin 	= 80,
+			.right_margin 	= 48,
+			.upper_margin 	= 14,
+			.lower_margin 	= 3,
+			.hsync_len 	= 32,
+			.vsync_len 	= 5,
+			.xres 		= 1360,
+			.yres 		= 768,
+		},
+	},
 	.vidcon0	= VIDCON0_VIDOUT_RGB | VIDCON0_PNRMODE_RGB,
-	.vidcon1	= VIDCON1_INV_HSYNC | VIDCON1_INV_VSYNC,
-	.setup_gpio	= exynos4_fimd0_gpio_setup_24bpp,
+	.vidcon1	= VIDCON1_INV_HSYNC | VIDCON1_INV_VSYNC | VIDCON1_INV_VCLK,
+	.default_win 	= 0,
+	.bpp 		= 32,
 };
 
 static void lcd_lp101wh1_set_power(struct plat_lcd_data *pd,
@@ -353,7 +349,7 @@ static struct platform_device nanopc_lcd_lp101wh1 = {
 static struct gpio_keys_button nanopc_gpio_keys_tables[] = {
 	{
 		.code			= KEY_1,
-		.gpio			= EXYNOS4_GPX3(2),	
+		.gpio			= EXYNOS4_GPX3(2),
 		.desc			= "KEY_USER_1",
 		.type			= EV_KEY,
 		.active_low		= 1,
@@ -419,6 +415,55 @@ static void __init nanopc_ohci_init(void)
 /* USB OTG */
 static struct s3c_hsotg_plat nanopc_hsotg_pdata;
 
+#ifdef CONFIG_USB_EXYNOS_SWITCH
+static struct s5p_usbswitch_platdata hkdk4412_usbswitch_pdata;
+
+static void __init hkdk4412_usbswitch_init(void)
+{
+	struct s5p_usbswitch_platdata *pdata = &hkdk4412_usbswitch_pdata;
+	int err;
+
+	pdata->gpio_host_detect = EXYNOS4_GPX3(1); /* low active */
+	err = gpio_request_one(pdata->gpio_host_detect, GPIOF_IN, "HOST_DETECT");
+	if (err) {
+		printk(KERN_ERR "failed to request gpio_host_detect\n");
+		return;
+	}
+
+	s3c_gpio_cfgpin(pdata->gpio_host_detect, S3C_GPIO_SFN(0xF));
+	s3c_gpio_setpull(pdata->gpio_host_detect, S3C_GPIO_PULL_UP);
+	gpio_free(pdata->gpio_host_detect);
+
+	pdata->gpio_device_detect = EXYNOS4_GPX1(6); /* high active */
+	err = gpio_request_one(pdata->gpio_device_detect, GPIOF_IN, "DEVICE_DETECT");
+	if (err) {
+		printk(KERN_ERR "failed to request gpio_host_detect for\n");
+		return;
+	}
+
+	s3c_gpio_cfgpin(pdata->gpio_device_detect, S3C_GPIO_SFN(0xF));
+	s3c_gpio_setpull(pdata->gpio_device_detect, S3C_GPIO_PULL_DOWN);
+	gpio_free(pdata->gpio_device_detect);
+
+	pdata->gpio_host_vbus = EXYNOS4_GPL2(0);
+	err = gpio_request_one(pdata->gpio_host_vbus, GPIOF_OUT_INIT_LOW, "HOST_VBUS_CONTROL");
+	if (err) {
+		printk(KERN_ERR "failed to request gpio_host_vbus\n");
+		return;
+	}
+
+	s3c_gpio_setpull(pdata->gpio_host_vbus, S3C_GPIO_PULL_NONE);
+	gpio_free(pdata->gpio_host_vbus);
+
+	pdata->ohci_dev = &exynos4_device_ohci.dev;
+	pdata->ehci_dev = &s5p_device_ehci.dev;
+	pdata->s3c_hsotg_dev = &s3c_device_usb_hsotg.dev;
+
+	s5p_usbswitch_set_platdata(pdata);
+}
+#endif
+
+
 /* SDCARD */
 static struct s3c_sdhci_platdata nanopc_hsmmc2_pdata __initdata = {
 	.max_width	= 4,
@@ -460,7 +505,7 @@ static struct resource tmu_resource[] = {
 		.end = EXYNOS4_PA_TMU + 0x0100,
 		.flags = IORESOURCE_MEM,
 	},
-	[1] = { 
+	[1] = {
 		.start = EXYNOS4_IRQ_TMU_TRIG0,
 		.end = EXYNOS4_IRQ_TMU_TRIG0,
 		.flags = IORESOURCE_IRQ,
@@ -483,7 +528,7 @@ static struct s3c64xx_spi_csinfo spi1_csi = {
 static struct spi_board_info spi1_board_info[] __initdata = {
 	[0] = {
 		.modalias = "spidev",
-		.max_speed_hz = 10 * 1000 * 1000, // 10 mhz
+		.max_speed_hz = 40 * 1000 * 1000, // 10 mhz
 		.bus_num = 1,
 		.chip_select = 0,
 		.mode = SPI_MODE_3,
@@ -517,6 +562,7 @@ static struct platform_device *nanopc_devices[] __initdata = {
 	&s5p_device_mfc_l,
 	&s5p_device_mfc_r,
 	&s5p_device_g2d,
+    &s5p_device_jpeg,
 	&mali_gpu_device,
 #if defined(CONFIG_S5P_DEV_TV)
 	&s5p_device_hdmi,
@@ -528,7 +574,7 @@ static struct platform_device *nanopc_devices[] __initdata = {
 	&exynos4_device_ohci,
 	&exynos_device_dwmci,
 	&nanopc_leds_gpio,
-#if defined(CONFIG_LCD_LP101WH1)
+#if defined(CONFIG_LCD_LP101WH1) && !defined(CONFIG_ODROID_U2) && defined(CONFIG_DRM_EXYNOS_FIMD)
 	&nanopc_lcd_lp101wh1,
 #endif
 	&nanopc_gpio_keys,
@@ -539,6 +585,10 @@ static struct platform_device *nanopc_devices[] __initdata = {
 #endif
 	&s3c64xx_device_spi1,
 	&tiny4412_audio,
+    #if defined(CONFIG_USB_EXYNOS_SWITCH)
+	&s5p_device_usbswitch,
+    #endif
+
 };
 
 #if defined(CONFIG_S5P_DEV_TV)
@@ -596,7 +646,7 @@ static int nanopc_reboot_notifier(struct notifier_block *this, unsigned long cod
 
 	__raw_writel(0, S5P_INFORM4);
 
-    // eMMC HW_RST  
+    // eMMC HW_RST
     gpio_request(EXYNOS4_GPK1(2), "GPK1");
     gpio_direction_output(EXYNOS4_GPK1(2), 0);
     msleep(150);
@@ -604,7 +654,7 @@ static int nanopc_reboot_notifier(struct notifier_block *this, unsigned long cod
     gpio_free(EXYNOS4_GPK1(2));
 	msleep(500);
     return NOTIFY_DONE;
-}	
+}
 
 
 static struct notifier_block nanopc_reboot_notifier_nb = {
@@ -616,7 +666,7 @@ static int exynos_boot_dev;
 	((exynos_boot_dev == 0x6) || (exynos_boot_dev == 0x7))
 #define is_bootfrom_sd()	\
 	 (exynos_boot_dev == 0x3)
-	 
+
 static void __init exynos_bootdev_init(void)
 {
 	u32 capboot = MMC_CAP2_BOOT_DEVICE;
@@ -677,10 +727,12 @@ static void __init nanopc_machine_init(void)
 	nanopc_ehci_init();
 	nanopc_ohci_init();
 	s3c_hsotg_set_platdata(&nanopc_hsotg_pdata);
+#ifdef CONFIG_USB_EXYNOS_SWITCH
+	hkdk4412_usbswitch_init();
+#endif
 
 #ifdef CONFIG_LCD_LP101WH1
 	nanopc_fb_init_pdata(&nanopc_fb_pdata);
-   	s5p_fimd0_set_platdata(&nanopc_fb_pdata);
 #endif
 
 	s3c64xx_spi1_set_platdata(NULL, 0, 1);
@@ -695,6 +747,12 @@ static void __init nanopc_machine_init(void)
 	 * on the hdmiphy i2c adapter being dynamically assigned address 8. */
 	i2c_register_board_info(8, &hdmiphy_info, 1);
 #endif
+
+#if defined(CONFIG_LCD_LP101WH1) && !defined(CONFIG_ODROID_U2) && defined(CONFIG_DRM_EXYNOS_FIMD)
+	s5p_device_fimd0.dev.platform_data = &drm_fimd_pdata;
+	exynos4_fimd0_gpio_setup_24bpp();
+#endif
+
 
 	platform_add_devices(nanopc_devices, ARRAY_SIZE(nanopc_devices));
 
