@@ -72,7 +72,7 @@ static struct platform_device tiny4412_audio = {
 	.id			= -1,
 };
 
-/**
+
 #include <mach/s3cfb.h>
 #define CONFIG_FB_S3C_NR_BUFFERS 3
 static void __init nanopc_fb_init_pdata(struct s3c_fb_platdata *pd) {
@@ -131,7 +131,7 @@ static void __init nanopc_fb_init_pdata(struct s3c_fb_platdata *pd) {
 		val |= VIDCON1_INV_VDEN;
 
 	pd->vidcon1 = val;
-}*/
+}
 
 extern void exynos4_setup_dwmci_cfg_gpio(struct platform_device *dev, int width);
 
