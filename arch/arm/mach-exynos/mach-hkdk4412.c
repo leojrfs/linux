@@ -322,7 +322,7 @@ static struct exynos_drm_fimd_pdata drm_fimd_pdata = {
 	.default_win 	= 0,
 	.bpp 		= 32,
 };
-	
+
 static void lcd_lp101wh1_set_power(struct plat_lcd_data *pd,
 				   unsigned int power)
 {
@@ -493,7 +493,7 @@ static struct resource tmu_resource[] = {
 		.end = EXYNOS4_PA_TMU + 0x0100,
 		.flags = IORESOURCE_MEM,
 	},
-	[1] = { 
+	[1] = {
 		.start = EXYNOS4_IRQ_TMU_TRIG0,
 		.end = EXYNOS4_IRQ_TMU_TRIG0,
 		.flags = IORESOURCE_IRQ,
@@ -521,7 +521,7 @@ struct odroid_fan_platform_data odroid_fan_pdata = {
 
 static struct platform_device odroid_fan = {
         .name   = "odroidu2-fan",
-        .id     = -1,  
+        .id     = -1,
         .dev.platform_data = &odroid_fan_pdata,
 };
 #endif
@@ -668,7 +668,7 @@ static int hkdk4412_reboot_notifier(struct notifier_block *this, unsigned long c
 
 	__raw_writel(0, S5P_INFORM4);
 
-        // eMMC HW_RST  
+        // eMMC HW_RST
         gpio_request(EXYNOS4_GPK1(2), "GPK1");
         gpio_direction_output(EXYNOS4_GPK1(2), 0);
         msleep(150);
@@ -676,7 +676,7 @@ static int hkdk4412_reboot_notifier(struct notifier_block *this, unsigned long c
         gpio_free(EXYNOS4_GPK1(2));
 	msleep(500);
         return NOTIFY_DONE;
-}	
+}
 
 
 static struct notifier_block hkdk4412_reboot_notifier_nb = {

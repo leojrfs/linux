@@ -416,11 +416,11 @@ static void __init nanopc_ohci_init(void)
 static struct s3c_hsotg_plat nanopc_hsotg_pdata;
 
 #ifdef CONFIG_USB_EXYNOS_SWITCH
-static struct s5p_usbswitch_platdata hkdk4412_usbswitch_pdata;
+static struct s5p_usbswitch_platdata nanopc_usbswitch_pdata;
 
-static void __init hkdk4412_usbswitch_init(void)
+static void __init nanopc_usbswitch_init(void)
 {
-	struct s5p_usbswitch_platdata *pdata = &hkdk4412_usbswitch_pdata;
+	struct s5p_usbswitch_platdata *pdata = &nanopc_usbswitch_pdata;
 	int err;
 
 	pdata->gpio_host_detect = EXYNOS4_GPX3(1); /* low active */
@@ -574,7 +574,7 @@ static struct platform_device *nanopc_devices[] __initdata = {
 	&exynos4_device_ohci,
 	&exynos_device_dwmci,
 	&nanopc_leds_gpio,
-#if defined(CONFIG_LCD_LP101WH1) && !defined(CONFIG_ODROID_U2) && defined(CONFIG_DRM_EXYNOS_FIMD)
+#if defined(CONFIG_LCD_LP101WH1) && !defined(CONFIG_NANOPC_T1) && defined(CONFIG_DRM_EXYNOS_FIMD)
 	&nanopc_lcd_lp101wh1,
 #endif
 	&nanopc_gpio_keys,
@@ -728,7 +728,7 @@ static void __init nanopc_machine_init(void)
 	nanopc_ohci_init();
 	s3c_hsotg_set_platdata(&nanopc_hsotg_pdata);
 #ifdef CONFIG_USB_EXYNOS_SWITCH
-	hkdk4412_usbswitch_init();
+	nanopc_usbswitch_init();
 #endif
 
 //#ifdef CONFIG_LCD_LP101WH1
@@ -748,7 +748,7 @@ static void __init nanopc_machine_init(void)
 	i2c_register_board_info(8, &hdmiphy_info, 1);
 #endif
 
-#if defined(CONFIG_LCD_LP101WH1) && !defined(CONFIG_ODROID_U2) && defined(CONFIG_DRM_EXYNOS_FIMD)
+#if defined(CONFIG_LCD_LP101WH1) && !defined(CONFIG_NANOPC_T1) && defined(CONFIG_DRM_EXYNOS_FIMD)
 	s5p_device_fimd0.dev.platform_data = &drm_fimd_pdata;
 	exynos4_fimd0_gpio_setup_24bpp();
 #endif
