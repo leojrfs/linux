@@ -80,7 +80,7 @@ static struct regulator_init_data max77686_buck3_data = {
 //-----------------------------------------------------------------------------------
 // BUCK4 : VDD_G3D(1.0V)
 //-----------------------------------------------------------------------------------
-static struct regulator_consumer_supply buck4_consumer =
+static struct regulator_consumer_supply buck4_consumer = 
 	REGULATOR_SUPPLY("vdd_g3d", NULL);
 
 static struct regulator_init_data max77686_buck4_data = {
@@ -159,7 +159,7 @@ static struct regulator_init_data max77686_buck7_data = {
 //-----------------------------------------------------------------------------------
 // BUCK8 : IO(2.8V)
 //-----------------------------------------------------------------------------------
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
 static struct regulator_init_data max77686_buck8_data = {
 	.constraints	= {
 		.name		= "BUCK8 3V0",
@@ -206,7 +206,7 @@ static struct regulator_init_data max77686_buck9_data = {
 		.name		= "BUCK9 1V2",
 		.min_uV		= 1200000,
 		.max_uV		= 1200000,
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
 		.always_on	= 0,
 #else
 		.always_on	= 1,
@@ -402,11 +402,11 @@ static struct regulator_init_data max77686_ldo9_data = {
 		.min_uV		= 1000000,
 		.max_uV		= 1000000,
 		.apply_uV	= 1,
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
         .always_on  = 0,
 #else
 		.always_on	= 1,
-#endif
+#endif		
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 		.state_mem	= {
 			.uV		= 1000000,
@@ -430,14 +430,12 @@ static struct regulator_init_data max77686_ldo10_data = {
 		.min_uV		= 1800000,
 		.max_uV		= 1800000,
 		.boot_on	= 1,
-		.always_on	= 1,
-		.apply_uV	= 1,
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 		.state_mem	= {
 			.disabled	= 1,
-			.mode       = REGULATOR_MODE_STANDBY,
+			.mode		= REGULATOR_MODE_STANDBY,
 		},
-        .initial_state = PM_SUSPEND_MEM,
+		.initial_state = PM_SUSPEND_MEM, 
 	},
 	.num_consumer_supplies  = ARRAY_SIZE(ldo10_consumer_77686),
 	.consumer_supplies  = ldo10_consumer_77686,
@@ -479,7 +477,7 @@ static struct regulator_init_data max77686_ldo12_data = {
 			.disabled	= 1,
 			.mode		= REGULATOR_MODE_STANDBY,
 		},
-		.initial_state = PM_SUSPEND_MEM,
+		.initial_state = PM_SUSPEND_MEM, 
 	},
 	.num_consumer_supplies	= 1,
 	.consumer_supplies  = &ldo12_consumer_77686,
@@ -549,7 +547,7 @@ static struct regulator_init_data max77686_ldo15_data = {
 			.disabled	= 1,
 			.mode		= REGULATOR_MODE_STANDBY,
 		},
-		.initial_state = PM_SUSPEND_MEM,
+		.initial_state = PM_SUSPEND_MEM, 
 	},
 	.num_consumer_supplies	= 1,
 	.consumer_supplies  = &ldo15_consumer_77686,
@@ -608,11 +606,11 @@ static struct regulator_init_data max77686_ldo18_data = {
 		.min_uV		= 1800000,
 		.max_uV		= 1800000,
 		.apply_uV	= 1,
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
         .always_on  = 0,
 #else
 		.always_on	= 1,
-#endif
+#endif		
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 		.state_mem	= {
 			.uV		= 1800000,
@@ -692,7 +690,7 @@ static struct regulator_init_data max77686_ldo21_data = {
 //-----------------------------------------------------------------------------------
 // LDO22 : Not used
 //-----------------------------------------------------------------------------------
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
 static struct regulator_consumer_supply ldo22_consumer_77686 =
 	REGULATOR_SUPPLY("vmmc", "dw_mmc");
 static struct regulator_init_data max77686_ldo22_data = {
@@ -744,9 +742,9 @@ static struct regulator_init_data max77686_ldo23_data = {
 #else
 		.min_uV		= 2800000,
 		.max_uV		= 2800000,
-#endif
+#endif		
 		.apply_uV	= 1,
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
         .always_on  = 0,
 #else
 		.always_on	= 1,
@@ -757,7 +755,7 @@ static struct regulator_init_data max77686_ldo23_data = {
 			.uV		= 3300000,
 #else
 			.uV		= 2800000,
-#endif
+#endif			
 			.enabled = 1,
 		},
 	},
@@ -783,13 +781,13 @@ static struct regulator_init_data max77686_ldo24_data = {
 #else
 		.min_uV		= 3300000,
 		.max_uV		= 3300000,
-#endif
+#endif		
 		.apply_uV	= 1,
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
         .always_on  = 0,
 #else
 		.always_on	= 1,
-#endif
+#endif		
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 		.state_mem	= {
 #if defined(CONFIG_FB_S5P_S6E8AA1)
@@ -798,7 +796,7 @@ static struct regulator_init_data max77686_ldo24_data = {
 			.uV		= 3000000,
 #else
 			.uV		= 3300000,
-#endif
+#endif			
 			.enabled = 1,
 		},
 	},
@@ -821,7 +819,7 @@ static struct regulator_init_data max77686_ldo25_data = {
 #else
 		.min_uV		= 1800000,
 		.max_uV		= 1800000,
-#endif
+#endif		
 		.apply_uV	= 1,
 		.always_on	= 1,
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
@@ -850,11 +848,11 @@ static struct regulator_init_data max77686_ldo26_data = {
 		.min_uV		= 3000000,
 		.max_uV		= 3000000,
 		.apply_uV	= 1,
-#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2)||(CONFIG_NANOPC_T1)
+#if defined(CONFIG_ODROID_U)||defined(CONFIG_ODROID_U2) ||(CONFIG_NANOPC_T1)
         .always_on  = 0,
 #else
 		.always_on	= 1,
-#endif
+#endif		
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 		.state_mem	= {
 			.uV		= 3000000,
@@ -885,45 +883,45 @@ static struct regulator_init_data max77686_ldo26_data = {
 // Regulator Init data
 //-----------------------------------------------------------------------------------
 static struct max77686_regulator_data max77686_regulators[] = {
-	{ MAX77686_LDO1,		&max77686_ldo1_data },
-	{ MAX77686_LDO2,     	&max77686_ldo2_data },
-	{ MAX77686_LDO3,     	&max77686_ldo3_data },
-	{ MAX77686_LDO4,     	&max77686_ldo4_data },
-	{ MAX77686_LDO5,     	&max77686_ldo5_data },
-	{ MAX77686_LDO6,     	&max77686_ldo6_data },
+	{ MAX77686_LDO1,		&max77686_ldo1_data },  		
+	{ MAX77686_LDO2,     	&max77686_ldo2_data },  
+	{ MAX77686_LDO3,     	&max77686_ldo3_data },  
+	{ MAX77686_LDO4,     	&max77686_ldo4_data },  
+	{ MAX77686_LDO5,     	&max77686_ldo5_data },  
+	{ MAX77686_LDO6,     	&max77686_ldo6_data },  
 	{ MAX77686_LDO7,     	&max77686_ldo7_data },
 	{ MAX77686_LDO8,     	&max77686_ldo8_data },
 	{ MAX77686_LDO9,     	&max77686_ldo9_data },
 	{ MAX77686_LDO10,    	&max77686_ldo10_data },
-	{ MAX77686_LDO11,    	&max77686_ldo11_data },
-	{ MAX77686_LDO12,    	&max77686_ldo12_data },
-	{ MAX77686_LDO13,		&max77686_ldo13_data },
-	{ MAX77686_LDO14,    	&max77686_ldo14_data },
-	{ MAX77686_LDO15,    	&max77686_ldo15_data },
-	{ MAX77686_LDO16,    	&max77686_ldo16_data },
-	{ MAX77686_LDO17,    	&max77686_ldo17_data },
-	{ MAX77686_LDO18,    	&max77686_ldo18_data },
-	{ MAX77686_LDO19,    	&max77686_ldo19_data },
-	{ MAX77686_LDO20,    	&max77686_ldo20_data },
-	{ MAX77686_LDO21,    	&max77686_ldo21_data },
-	{ MAX77686_LDO22,    	&max77686_ldo22_data },
-	{ MAX77686_LDO23,    	&max77686_ldo23_data },
-	{ MAX77686_LDO24,    	&max77686_ldo24_data },
-	{ MAX77686_LDO25,    	&max77686_ldo25_data },
-	{ MAX77686_LDO26,    	&max77686_ldo26_data },
+	{ MAX77686_LDO11,    	&max77686_ldo11_data }, 
+	{ MAX77686_LDO12,    	&max77686_ldo12_data }, 
+	{ MAX77686_LDO13,		&max77686_ldo13_data },  
+	{ MAX77686_LDO14,    	&max77686_ldo14_data },  
+	{ MAX77686_LDO15,    	&max77686_ldo15_data },  
+	{ MAX77686_LDO16,    	&max77686_ldo16_data },  
+	{ MAX77686_LDO17,    	&max77686_ldo17_data },  
+	{ MAX77686_LDO18,    	&max77686_ldo18_data },  
+	{ MAX77686_LDO19,    	&max77686_ldo19_data },  
+	{ MAX77686_LDO20,    	&max77686_ldo20_data },  
+	{ MAX77686_LDO21,    	&max77686_ldo21_data },  
+	{ MAX77686_LDO22,    	&max77686_ldo22_data },  
+	{ MAX77686_LDO23,    	&max77686_ldo23_data },  
+	{ MAX77686_LDO24,    	&max77686_ldo24_data },  
+	{ MAX77686_LDO25,    	&max77686_ldo25_data },  
+	{ MAX77686_LDO26,    	&max77686_ldo26_data },  
 
-	{ MAX77686_BUCK1,    	&max77686_buck1_data },
-	{ MAX77686_BUCK2,    	&max77686_buck2_data },
-	{ MAX77686_BUCK3,    	&max77686_buck3_data },
-	{ MAX77686_BUCK4,    	&max77686_buck4_data },
-	{ MAX77686_BUCK5,    	&max77686_buck5_data },
-	{ MAX77686_BUCK6,		&max77686_buck6_data },
-	{ MAX77686_BUCK7,       &max77686_buck7_data },
-	{ MAX77686_BUCK8,       &max77686_buck8_data },
-	{ MAX77686_BUCK9,       &max77686_buck9_data },
+	{ MAX77686_BUCK1,    	&max77686_buck1_data },  
+	{ MAX77686_BUCK2,    	&max77686_buck2_data }, 
+	{ MAX77686_BUCK3,    	&max77686_buck3_data }, 
+	{ MAX77686_BUCK4,    	&max77686_buck4_data }, 
+	{ MAX77686_BUCK5,    	&max77686_buck5_data }, 
+	{ MAX77686_BUCK6,		&max77686_buck6_data },  
+	{ MAX77686_BUCK7,       &max77686_buck7_data },  
+	{ MAX77686_BUCK8,       &max77686_buck8_data },  
+	{ MAX77686_BUCK9,       &max77686_buck9_data },  
 
-//	{ MAX77686_EN32KHZ_AP, 	&max77686_32KHz_AP_data },
-//	{ MAX77686_EN32KHZ_CP, 	&max77686_32KHz_CP_data },
+//	{ MAX77686_EN32KHZ_AP, 	&max77686_32KHz_AP_data },  
+//	{ MAX77686_EN32KHZ_CP, 	&max77686_32KHz_CP_data },  
 };
 
 static struct max77686_platform_data exynos4_max77686_info = {
@@ -943,7 +941,7 @@ static struct max77686_platform_data exynos4_max77686_info = {
 //	.buck234_gpios[0]	= EXYNOS4_GPX2(3),
 //	.buck234_gpios[1]	= EXYNOS4_GPX2(4),
 //	.buck234_gpios[2]	= EXYNOS4_GPX2(5),
-//
+//	
 //	.buck2_voltage[0] = 1300000,	/* 1.3V */
 //	.buck2_voltage[1] = 1000000,	/* 1.0V */
 //	.buck2_voltage[2] = 950000,	/* 0.95V */
