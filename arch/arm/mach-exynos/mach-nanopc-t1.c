@@ -731,10 +731,6 @@ static void __init nanopc_machine_init(void)
 	nanopc_usbswitch_init();
 #endif
 
-//#ifdef CONFIG_LCD_LP101WH1
-//	nanopc_fb_init_pdata(&nanopc_fb_pdata);
-//#endif
-
 	s3c64xx_spi1_set_platdata(NULL, 0, 1);
 	spi_register_board_info(spi1_board_info, ARRAY_SIZE(spi1_board_info));
 
@@ -748,7 +744,7 @@ static void __init nanopc_machine_init(void)
 	i2c_register_board_info(8, &hdmiphy_info, 1);
 #endif
 
-#if defined(CONFIG_LCD_LP101WH1) && !defined(CONFIG_NANOPC_T1) && defined(CONFIG_DRM_EXYNOS_FIMD)
+#if defined(CONFIG_LCD_LP101WH1) && defined(CONFIG_DRM_EXYNOS_FIMD)
 	s5p_device_fimd0.dev.platform_data = &drm_fimd_pdata;
 	exynos4_fimd0_gpio_setup_24bpp();
 #endif
